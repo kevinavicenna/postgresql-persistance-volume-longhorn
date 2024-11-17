@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-application
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: postgres-application
+  template:
+    metadata:
+      labels:
+        app: postgres-application
+    spec:
+      containers:
+      - name: postgres-application
+        image: 'postgres:16.4'
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5432
+        envFrom:
+          - configMapRef:
+              name: postgres-secret
+        volumeMounts:
+          - mountPath: /mnt/postgresql
+            name: data-postgresql
+        env:
+          - name: PGDATA
+            value: /mnt/postgresql/data
+
+      volumes:
+        - name: data-postgresql
+          persistentVolumeClaim:
+            claimName: postgresql-volume-claim
+
+

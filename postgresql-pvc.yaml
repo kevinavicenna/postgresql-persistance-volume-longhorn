@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-volume-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-postgresql-rwx
+  resources:
+    requests:
+      storage: 5Gi
